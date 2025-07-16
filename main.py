@@ -50,6 +50,10 @@ class LoginWindow(tk.Tk):
         # ربط مفتاح Enter بتسجيل الدخول
         self.bind('<Return>', lambda event: self.login())
 
+        # تفعيل قائمة النسخ واللصق
+        self.add_context_menu(self.username_entry)
+        self.add_context_menu(self.password_entry)
+
     def create_login_ui(self):
         # إطار رئيسي
         main_frame = tk.Frame(self, bg=COLORS['light'])
@@ -152,6 +156,18 @@ class LoginWindow(tk.Tk):
             messagebox.showerror("خطأ", "بيانات الدخول غير صحيحة")
             self.password_entry.delete(0, tk.END)
             self.username_entry.focus()
+
+    def add_context_menu(self, widget):
+        """إضافة قائمة نسخ/لصق لحقول الإدخال"""
+        menu = tk.Menu(widget, tearoff=0)
+        menu.add_command(label="قص", command=lambda: widget.event_generate("<<Cut>>"))
+        menu.add_command(label="نسخ", command=lambda: widget.event_generate("<<Copy>>"))
+        menu.add_command(label="لصق", command=lambda: widget.event_generate("<<Paste>>"))
+
+        def show_menu(event):
+            menu.tk_popup(event.x_root, event.y_root)
+
+        widget.bind("<Button-3>", show_menu)
 
 
 class HRApp(tk.Tk):
