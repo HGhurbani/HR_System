@@ -1,5 +1,6 @@
 import sqlite3
-import hashlib # For hashing the default admin password
+import os
+import hashlib  # For hashing the default admin password
 
 DB_NAME = "hr_system.db"
 
@@ -98,6 +99,56 @@ def init_db():
 
     except sqlite3.Error as e:
         print(f"Database error: {e}")
+    finally:
+        if conn:
+            conn.close()
+
+def upgrade_db():
+    """Upgrade existing database schema and recover if corrupted."""
+    conn = None
+    try:
+        conn = sqlite3.connect(DB_NAME)
+        cur = conn.cursor()
+
+        # Check database integrity first
+        cur.execute("PRAGMA integrity_check")
+        result = cur.fetchone()
+        if result[0] != "ok":
+            raise sqlite3.DatabaseError("Integrity check failed")
+
+        # --- Upgrade employees table ---
+        cur.execute("PRAGMA table_info(employees)")
+        columns = [row[1] for row in cur.fetchall()]
+
+        if "full_name" not in columns:
+            if "name" in columns:
+                cur.execute("ALTER TABLE employees RENAME COLUMN name TO full_name")
+            else:
+                cur.execute("ALTER TABLE employees ADD COLUMN full_name TEXT")
+
+        # New columns added in later versions
+        for col_def in [
+            ("email", "TEXT UNIQUE"),
+            ("phone", "TEXT"),
+            ("address", "TEXT"),
+            ("employee_code", "TEXT UNIQUE")
+        ]:
+            if col_def[0] not in columns:
+                cur.execute(f"ALTER TABLE employees ADD COLUMN {col_def[0]} {col_def[1]}")
+
+        conn.commit()
+
+    except sqlite3.DatabaseError as e:
+        print(f"Database upgrade error: {e}")
+        if conn:
+            conn.close()
+        # If the database is malformed, recreate it
+        if os.path.exists(DB_NAME):
+            backup = DB_NAME + ".corrupt"
+            os.replace(DB_NAME, backup)
+            print(f"Corrupt database moved to {backup}. Creating new database...")
+        init_db()
+        return
     finally:
         if conn:
             conn.close()

@@ -15,6 +15,15 @@ try:
     import database
 
     DB_NAME = database.DB_NAME
+    # Attempt to upgrade or initialize the database on startup
+    if hasattr(database, "upgrade_db"):
+        try:
+            database.upgrade_db()
+        except Exception as e:
+            print(f"Database upgrade failed: {e}. Reinitializing database...")
+            database.init_db()
+    else:
+        database.init_db()
 except ImportError:
     DB_NAME = "hr_system.db"  # تعريف افتراضي إذا لم يتم العثور على database.py
 
