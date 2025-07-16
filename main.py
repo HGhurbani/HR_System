@@ -356,6 +356,10 @@ class HRApp(tk.Tk):
         self.create_report_tab()
         self.create_settings_tab()
 
+        # عكس ترتيب التبويبات لعرضها من اليمين لليسار
+        for tab in self.notebook.tabs():
+            self.notebook.insert(0, tab)
+
         # إنشاء قاموس البيانات
         self.emp_dict = {}
         self.refresh_employees_combobox()
