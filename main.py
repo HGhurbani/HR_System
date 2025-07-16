@@ -53,7 +53,9 @@ class LoginWindow(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("نظام الموارد البشرية - تسجيل الدخول")
-        self.geometry("450x350")
+        # زيادة ارتفاع النافذة قليلاً لضمان ظهور زر الدخول وكامل محتويات
+        # إطار تسجيل الدخول في جميع الشاشات
+        self.geometry("450x400")
         self.resizable(False, False)
         self.configure(bg=COLORS['light'])
         enable_rtl(self)
