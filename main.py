@@ -319,13 +319,13 @@ class HRApp(tk.Tk):
 
         # أزرار الأدوات
         tools = [
-            ("🏠", "الرئيسية", self.go_home),
-            ("👥", "الموظفون", lambda: self.notebook.select(0)),
-            ("⏰", "الحضور", lambda: self.notebook.select(1)),
-            ("🏖️", "الإجازات", lambda: self.notebook.select(2)),
-            ("💰", "الرواتب", lambda: self.notebook.select(3)),
-            ("📊", "التقارير", lambda: self.notebook.select(4)),
-            ("🔧", "الإعدادات", lambda: self.notebook.select(5)),
+            ("🏠", "الرئيسية", lambda: self.notebook.select(self.employee_tab)),
+            ("👥", "الموظفون", lambda: self.notebook.select(self.employee_tab)),
+            ("⏰", "الحضور", lambda: self.notebook.select(self.attendance_tab)),
+            ("🏖️", "الإجازات", lambda: self.notebook.select(self.leave_tab)),
+            ("💰", "الرواتب", lambda: self.notebook.select(self.salary_tab)),
+            ("📊", "التقارير", lambda: self.notebook.select(self.report_tab)),
+            ("🔧", "الإعدادات", lambda: self.notebook.select(self.settings_tab)),
             ("🚪", "خروج", self.logout)
         ]
 
@@ -348,13 +348,13 @@ class HRApp(tk.Tk):
         self.notebook = ttk.Notebook(self)
         self.notebook.pack(fill="both", expand=True, padx=10, pady=10)
 
-        # إنشاء التبويبات
-        self.create_employee_tab()
-        self.create_attendance_tab()
-        self.create_leave_tab()
-        self.create_salary_tab()
-        self.create_report_tab()
-        self.create_settings_tab()
+        # إنشاء التبويبات مع الاحتفاظ بمراجعها
+        self.employee_tab = self.create_employee_tab()
+        self.attendance_tab = self.create_attendance_tab()
+        self.leave_tab = self.create_leave_tab()
+        self.salary_tab = self.create_salary_tab()
+        self.report_tab = self.create_report_tab()
+        self.settings_tab = self.create_settings_tab()
 
         # عكس ترتيب التبويبات لعرضها من اليمين لليسار
         for tab in self.notebook.tabs():
@@ -377,7 +377,7 @@ class HRApp(tk.Tk):
 
     def go_home(self):
         """العودة للصفحة الرئيسية"""
-        self.notebook.select(0)
+        self.notebook.select(self.employee_tab)
 
     def logout(self):
         """تسجيل الخروج"""
@@ -774,6 +774,8 @@ class HRApp(tk.Tk):
         except Exception as e:
             messagebox.showerror("خطأ في الطباعة", f"حدث خطأ أثناء حفظ التقرير: {e}")
 
+        return frame
+
     def refresh_employees(self):
         """تحديث قائمة الموظفين"""
         for row in self.emp_tree.get_children():
@@ -1154,6 +1156,8 @@ class HRApp(tk.Tk):
         except Exception as e:
             messagebox.showerror("خطأ في التقرير", f"حدث خطأ أثناء حفظ التقرير: {e}")
 
+        return frame
+
     def refresh_attendance(self):
         """تحديث جدول الحضور"""
         for row in self.att_tree.get_children():
@@ -1445,6 +1449,8 @@ class HRApp(tk.Tk):
                             f"إجازات معتمدة: {approved_count}\n"
                             f"إجازات معلقة: {pending_count}\n"
                             f"إجازات مرفوضة: {rejected_count}")
+
+        return frame
 
     def refresh_leaves(self):
         """تحديث جدول الإجازات"""
@@ -1791,6 +1797,8 @@ class HRApp(tk.Tk):
         self.net_salary_label.config(text="0.0")
         self.salary_tree.selection_remove(self.salary_tree.selection())  # Deselect any selected item
 
+        return frame
+
     def print_payslips(self):
         """طباعة كشوفات الرواتب"""
         messagebox.showinfo("طباعة كشوفات الرواتب", "سيتم تنفيذ وظيفة طباعة كشوفات الرواتب قريباً.")
@@ -1981,6 +1989,8 @@ class HRApp(tk.Tk):
         except Exception as e:
             messagebox.showerror("خطأ في التقرير", f"حدث خطأ أثناء حفظ التقرير: {e}")
 
+        return frame
+
     # ---------------- تبويب الإعدادات المحسن -----------------
     def create_settings_tab(self):
         frame = ttk.Frame(self.notebook)
@@ -2092,6 +2102,8 @@ class HRApp(tk.Tk):
                 self.update_status("تمت إعادة ضبط قاعدة البيانات")
             except Exception as e:
                 messagebox.showerror("خطأ في إعادة الضبط", str(e))
+
+        return frame
 
     def refresh_admin_list(self):
         """تحديث قائمة المسؤولين في Listbox"""
