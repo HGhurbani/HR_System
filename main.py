@@ -1985,6 +1985,8 @@ class HRApp(tk.Tk):
     def create_settings_tab(self):
         frame = ttk.Frame(self.notebook)
         self.notebook.add(frame, text="🔧 الإعدادات")
+        # تأكد من ظهور مكونات الصفحة باتجاه من اليمين لليسار
+        enable_rtl(frame)
 
         # إطار الإعدادات العامة
         general_settings_frame = tk.LabelFrame(frame, text="إعدادات عامة", bg='white', relief='raised', bd=1, padx=10,
