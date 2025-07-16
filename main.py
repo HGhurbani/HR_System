@@ -518,7 +518,7 @@ class HRApp(tk.Tk):
         column_widths = [50, 150, 120, 100, 100, 180, 120, 200, 100]
         for i, (col, width) in enumerate(zip(columns, column_widths)):
             self.emp_tree.heading(col, text=col)
-            self.emp_tree.column(col, width=width, anchor='center')
+            self.emp_tree.column(col, width=width, anchor='e')
 
         # إخفاء عمود المعرف
         self.emp_tree.column("id", width=0, stretch=False)
@@ -883,7 +883,7 @@ class HRApp(tk.Tk):
         column_widths = [0, 200, 120, 120, 120, 120, 100]
         for i, (col, width) in enumerate(zip(columns, column_widths)):
             self.att_tree.heading(col, text=col)
-            self.att_tree.column(col, width=width, anchor='center')
+            self.att_tree.column(col, width=width, anchor='e')
 
         # إخفاء عمود المعرف
         self.att_tree.column("id", width=0, stretch=False)
@@ -1271,7 +1271,7 @@ class HRApp(tk.Tk):
         column_widths = [0, 150, 100, 100, 100, 80, 200, 100, 120]
         for i, (col, width) in enumerate(zip(columns, column_widths)):
             self.leave_tree.heading(col, text=col)
-            self.leave_tree.column(col, width=width, anchor='center')
+            self.leave_tree.column(col, width=width, anchor='e')
 
         # إخفاء عمود المعرف
         self.leave_tree.column("id", width=0, stretch=False)
@@ -1562,7 +1562,7 @@ class HRApp(tk.Tk):
         column_widths = [0, 150, 80, 80, 120, 100, 100, 120, 120]
         for i, (col, width) in enumerate(zip(columns, column_widths)):
             self.salary_tree.heading(col, text=col)
-            self.salary_tree.column(col, width=width, anchor='center')
+            self.salary_tree.column(col, width=width, anchor='e')
 
         # إخفاء عمود المعرف
         self.salary_tree.column("id", width=0, stretch=False)
