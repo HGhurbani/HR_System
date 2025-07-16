@@ -342,7 +342,7 @@ class HRApp(tk.Tk):
         # إنشاء notebook محسن
         style = ttk.Style()
         style.theme_use('clam')
-        style.configure('TNotebook', tabposition='n')
+        style.configure('TNotebook', tabposition='ne')
         style.configure('TNotebook.Tab', padding=[20, 10])
 
         self.notebook = ttk.Notebook(self)
