@@ -64,26 +64,30 @@ class LoginWindow(tk.Tk):
         # إطار تسجيل الدخول
         login_frame = tk.Frame(main_frame, bg='white', relief='raised', bd=2)
         login_frame.pack(fill='both', expand=True, padx=20, pady=20)
+        login_frame.columnconfigure(0, weight=1)
+        login_frame.columnconfigure(1, weight=1)
 
         # العنوان الفرعي
         subtitle = tk.Label(login_frame, text="تسجيل الدخول",
                             font=('Arial', 14, 'bold'),
                             bg='white', fg=COLORS['primary'])
-        subtitle.pack(pady=(20, 30))
+        subtitle.grid(row=0, column=0, columnspan=2, pady=(20, 30))
 
         # حقل اسم المستخدم
         tk.Label(login_frame, text="اسم المستخدم:",
-                 font=('Arial', 10), bg='white', fg=COLORS['dark']).pack(pady=(0, 5))
+                 font=('Arial', 10), bg='white', fg=COLORS['dark']) \
+            .grid(row=1, column=0, sticky='e', padx=5, pady=(0, 5))
         self.username_entry = tk.Entry(login_frame, font=('Arial', 12),
                                        width=25, relief='solid', bd=1)
-        self.username_entry.pack(pady=(0, 15))
+        self.username_entry.grid(row=1, column=1, padx=5, pady=(0, 15))
 
         # حقل كلمة المرور
         tk.Label(login_frame, text="كلمة المرور:",
-                 font=('Arial', 10), bg='white', fg=COLORS['dark']).pack(pady=(0, 5))
+                 font=('Arial', 10), bg='white', fg=COLORS['dark']) \
+            .grid(row=2, column=0, sticky='e', padx=5, pady=(0, 5))
         self.password_entry = tk.Entry(login_frame, font=('Arial', 12),
                                        width=25, show="*", relief='solid', bd=1)
-        self.password_entry.pack(pady=(0, 20))
+        self.password_entry.grid(row=2, column=1, padx=5, pady=(0, 20))
 
         # زر تسجيل الدخول
         login_btn = tk.Button(login_frame, text="دخول",
@@ -91,14 +95,14 @@ class LoginWindow(tk.Tk):
                               bg=COLORS['primary'], fg='white',
                               width=20, pady=8, cursor='hand2',
                               command=self.login)
-        login_btn.pack(pady=(0, 20))
+        login_btn.grid(row=3, column=0, columnspan=2, pady=(0, 20))
 
         # معلومات المطور
         info_text = "المطور الافتراضي: admin / admin"
         info_label = tk.Label(login_frame, text=info_text,
                               font=('Arial', 9),
                               bg='white', fg=COLORS['secondary'])
-        info_label.pack(pady=(0, 10))
+        info_label.grid(row=4, column=0, columnspan=2, pady=(0, 10))
 
     def create_default_admin(self):
         """إنشاء حساب مدير افتراضي"""
