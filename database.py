@@ -4,6 +4,26 @@ import hashlib  # For hashing the default admin password
 
 DB_NAME = "hr_system.db"
 
+def safe_connect():
+    """Return a SQLite connection, recreating the DB if corrupted."""
+    conn = None
+    try:
+        conn = sqlite3.connect(DB_NAME)
+        cur = conn.cursor()
+        cur.execute("PRAGMA integrity_check")
+        if cur.fetchone()[0] != "ok":
+            raise sqlite3.DatabaseError("Integrity check failed")
+        return conn
+    except sqlite3.DatabaseError:
+        if conn:
+            conn.close()
+        if os.path.exists(DB_NAME):
+            backup = DB_NAME + ".corrupt"
+            os.replace(DB_NAME, backup)
+            print(f"Corrupt database moved to {backup}. Creating new database...")
+        init_db()
+        return sqlite3.connect(DB_NAME)
+
 def init_db():
     """
     Initializes the SQLite database by creating necessary tables
