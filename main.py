@@ -1982,7 +1982,6 @@ class HRApp(tk.Tk):
             ("تقرير الحضور والغياب", self.generate_attendance_report),
             ("تقرير الإجازات", self.generate_leave_report),
             ("تقرير الرواتب", self.generate_salary_report),
-            ("تقرير الأداء (مستقبلي)", lambda: messagebox.showinfo("تقرير", "هذه الميزة قيد التطوير.")),
         ]
 
         for text, command in report_buttons:
