@@ -31,7 +31,17 @@ COLORS = {
 
 # تفعيل المحاذاة من اليمين لليسار
 def enable_rtl(root):
-    """تهيئة الواجهة للعمل من اليمين لليسار"""
+    """تهيئة الواجهة للعمل من اليمين لليسار وتحسين الخط"""
+    # استخدام خط يدعم العربية بشكل جيد
+    default_font = ('DejaVu Sans', 11)
+    root.option_add('*Font', default_font)
+    root.option_add('*Label.font', default_font)
+    root.option_add('*Entry.font', default_font)
+    root.option_add('*Button.font', default_font)
+    root.option_add('*Listbox.font', default_font)
+    root.option_add('*Menu.font', default_font)
+
+    # محاذاة العناصر لليمين
     root.option_add('*Label.anchor', 'e')
     root.option_add('*Label.justify', 'right')
     root.option_add('*Entry.justify', 'right')
