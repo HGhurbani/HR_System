@@ -172,6 +172,64 @@ def upgrade_db():
     finally:
         if conn:
             conn.close()
+def upgrade_db():
+    """Ensure existing databases have required columns"""
+    conn = sqlite3.connect(DB_NAME)
+    cur = conn.cursor()
+
+    # Upgrade employees table
+    cur.execute("PRAGMA table_info(employees)")
+    cols = [c[1] for c in cur.fetchall()]
+    if 'full_name' not in cols:
+        if 'name' in cols:
+            try:
+                cur.execute("ALTER TABLE employees RENAME COLUMN name TO full_name")
+            except sqlite3.OperationalError:
+                pass
+        else:
+            cur.execute("ALTER TABLE employees ADD COLUMN full_name TEXT")
+    for col in ['email', 'phone', 'address', 'employee_code']:
+        if col not in cols:
+            cur.execute(f"ALTER TABLE employees ADD COLUMN {col} TEXT")
+
+    # Upgrade leaves table
+    cur.execute("PRAGMA table_info(leaves)")
+    cols = [c[1] for c in cur.fetchall()]
+    if 'days' not in cols:
+        cur.execute("ALTER TABLE leaves ADD COLUMN days INTEGER")
+    if 'request_date' not in cols:
+        cur.execute("ALTER TABLE leaves ADD COLUMN request_date TEXT")
+
+    # Upgrade salaries table
+    cur.execute("PRAGMA table_info(salaries)")
+    cols = [c[1] for c in cur.fetchall()]
+    if 'year' not in cols:
+        cur.execute("ALTER TABLE salaries ADD COLUMN year INTEGER")
+    if 'basic_salary' not in cols:
+        if 'base_salary' in cols:
+            try:
+                cur.execute("ALTER TABLE salaries RENAME COLUMN base_salary TO basic_salary")
+            except sqlite3.OperationalError:
+                pass
+        else:
+            cur.execute("ALTER TABLE salaries ADD COLUMN basic_salary REAL")
+    if 'bonuses' not in cols:
+        if 'allowances' in cols:
+            try:
+                cur.execute("ALTER TABLE salaries RENAME COLUMN allowances TO bonuses")
+            except sqlite3.OperationalError:
+                pass
+        else:
+            cur.execute("ALTER TABLE salaries ADD COLUMN bonuses REAL")
+    if 'deductions' not in cols:
+        cur.execute("ALTER TABLE salaries ADD COLUMN deductions REAL")
+    if 'net_salary' not in cols:
+        cur.execute("ALTER TABLE salaries ADD COLUMN net_salary REAL")
+    if 'payment_date' not in cols:
+        cur.execute("ALTER TABLE salaries ADD COLUMN payment_date TEXT")
+
+    conn.commit()
+    conn.close()
 
 if __name__ == "__main__":
     init_db()
