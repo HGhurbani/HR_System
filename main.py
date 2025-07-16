@@ -3,6 +3,7 @@ import shutil
 import csv
 import sqlite3
 from datetime import datetime, timedelta
+import calendar
 import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
 import re
@@ -48,6 +49,107 @@ def enable_rtl(root):
     root.option_add('*Button.justify', 'right')
     root.option_add('*Listbox.justify', 'right')
 
+
+class CalendarPicker(tk.Toplevel):
+    """نافذة منبثقة لاختيار التاريخ"""
+
+    def __init__(self, master, date_var):
+        super().__init__(master)
+        self.date_var = date_var
+        self.title("اختر التاريخ")
+        self.resizable(False, False)
+        self.grab_set()
+
+        try:
+            current = datetime.strptime(date_var.get(), "%Y-%m-%d")
+        except Exception:
+            current = datetime.now()
+
+        self.year = current.year
+        self.month = current.month
+
+        self.header = tk.Frame(self)
+        self.header.pack(pady=5)
+
+        tk.Button(self.header, text="<", command=self.prev_month).pack(side='right')
+        self.title_lbl = tk.Label(self.header, width=15)
+        self.title_lbl.pack(side='right')
+        tk.Button(self.header, text=">", command=self.next_month).pack(side='right')
+
+        self.cal_frame = tk.Frame(self)
+        self.cal_frame.pack(padx=5, pady=5)
+
+        self.draw_calendar()
+
+    def draw_calendar(self):
+        for w in self.cal_frame.winfo_children():
+            w.destroy()
+
+        self.title_lbl.config(text=f"{calendar.month_name[self.month]} {self.year}")
+
+        days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        for i, day in enumerate(days):
+            tk.Label(self.cal_frame, text=day).grid(row=0, column=i, padx=2, pady=2)
+
+        month_cal = calendar.monthcalendar(self.year, self.month)
+        for r, week in enumerate(month_cal, start=1):
+            for c, day in enumerate(week):
+                if day:
+                    btn = tk.Button(self.cal_frame, text=day, width=3,
+                                     command=lambda d=day: self.select_day(d))
+                    btn.grid(row=r, column=c, padx=1, pady=1)
+                else:
+                    tk.Label(self.cal_frame, text=" ", width=3).grid(row=r, column=c)
+
+    def prev_month(self):
+        if self.month == 1:
+            self.month = 12
+            self.year -= 1
+        else:
+            self.month -= 1
+        self.draw_calendar()
+
+    def next_month(self):
+        if self.month == 12:
+            self.month = 1
+            self.year += 1
+        else:
+            self.month += 1
+        self.draw_calendar()
+
+    def select_day(self, day):
+        self.date_var.set(datetime(self.year, self.month, day).strftime("%Y-%m-%d"))
+        self.destroy()
+
+
+class DateEntry(tk.Frame):
+    """حقل إدخال مع زر لفتح تقويم"""
+
+    def __init__(self, master=None, **kwargs):
+        super().__init__(master)
+        self.var = tk.StringVar()
+        self.entry = tk.Entry(self, textvariable=self.var, justify='right', **kwargs)
+        self.entry.pack(side='right', fill='x', expand=True)
+        btn = tk.Button(self, text="📅", command=self.show_calendar, relief='flat')
+        btn.pack(side='left')
+
+    def show_calendar(self):
+        CalendarPicker(self, self.var)
+
+    def get(self):
+        return self.var.get()
+
+    def insert(self, index, value):
+        self.entry.insert(index, value)
+
+    def delete(self, start, end=None):
+        self.entry.delete(start, end)
+
+    def focus(self):
+        self.entry.focus()
+
+    def bind(self, sequence=None, func=None, add=None):
+        self.entry.bind(sequence, func, add)
 
 class LoginWindow(tk.Tk):
     def __init__(self):
@@ -512,8 +614,11 @@ class HRApp(tk.Tk):
         for i, (label, key) in enumerate(labels_left):
             tk.Label(left_frame, text=label, font=('Arial', 10),
                      bg='white').grid(row=i, column=1, sticky="e", pady=5)
-            entry = tk.Entry(left_frame, font=('Arial', 10), width=25,
-                             justify='right')
+            if key == "hire_date":
+                entry = DateEntry(left_frame, font=('Arial', 10), width=25)
+            else:
+                entry = tk.Entry(left_frame, font=('Arial', 10), width=25,
+                                 justify='right')
             entry.grid(row=i, column=0, pady=5, padx=5, sticky="ew")
             self.emp_entries[key] = entry
 
@@ -855,8 +960,7 @@ class HRApp(tk.Tk):
         # التاريخ
         tk.Label(fields_frame, text="التاريخ:", font=('Arial', 10, 'bold'),
                  bg='white').grid(row=1, column=1, sticky="e", pady=5)
-        self.attendance_date = tk.Entry(fields_frame, font=('Arial', 10), width=30,
-                                        justify='right')
+        self.attendance_date = DateEntry(fields_frame, font=('Arial', 10), width=30)
         self.attendance_date.grid(row=1, column=0, pady=5, padx=10, sticky="ew")
         self.attendance_date.insert(0, datetime.now().strftime("%Y-%m-%d"))
 
@@ -1269,14 +1373,12 @@ class HRApp(tk.Tk):
 
         tk.Label(left_frame, text="من تاريخ:", font=('Arial', 10, 'bold'),
                  bg='white').grid(row=2, column=1, sticky='e', pady=5)
-        self.leave_from = tk.Entry(left_frame, font=('Arial', 10), width=25,
-                                   justify='right')
+        self.leave_from = DateEntry(left_frame, font=('Arial', 10), width=25)
         self.leave_from.grid(row=2, column=0, pady=5, sticky='ew')
 
         tk.Label(right_frame, text="إلى تاريخ:", font=('Arial', 10, 'bold'),
                  bg='white').grid(row=0, column=1, sticky='e', pady=5)
-        self.leave_to = tk.Entry(right_frame, font=('Arial', 10), width=25,
-                                 justify='right')
+        self.leave_to = DateEntry(right_frame, font=('Arial', 10), width=25)
         self.leave_to.grid(row=0, column=0, pady=5, sticky='ew')
 
         tk.Label(right_frame, text="عدد الأيام:", font=('Arial', 10, 'bold'),
@@ -1903,12 +2005,12 @@ class HRApp(tk.Tk):
         date_range_window.grab_set()
 
         tk.Label(date_range_window, text="من تاريخ (YYYY-MM-DD):").pack(pady=5)
-        from_date_entry = tk.Entry(date_range_window, justify='right')
+        from_date_entry = DateEntry(date_range_window)
         from_date_entry.pack(pady=2)
         from_date_entry.insert(0, (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d"))
 
         tk.Label(date_range_window, text="إلى تاريخ (YYYY-MM-DD):").pack(pady=5)
-        to_date_entry = tk.Entry(date_range_window, justify='right')
+        to_date_entry = DateEntry(date_range_window)
         to_date_entry.pack(pady=2)
         to_date_entry.insert(0, datetime.now().strftime("%Y-%m-%d"))
 
