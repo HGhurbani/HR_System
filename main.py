@@ -132,7 +132,7 @@ class LoginWindow(tk.Tk):
     def create_default_admin(self):
         """إنشاء حساب مدير افتراضي"""
         try:
-            conn = sqlite3.connect(DB_NAME)
+            conn = database.safe_connect() if hasattr(database, 'safe_connect') else sqlite3.connect(DB_NAME)
             c = conn.cursor()
             # تشفير كلمة المرور
             password_hash = hashlib.sha256("admin".encode()).hexdigest()
@@ -170,7 +170,7 @@ class LoginWindow(tk.Tk):
         # تشفير كلمة المرور
         password_hash = hashlib.sha256(pw.encode()).hexdigest()
 
-        conn = sqlite3.connect(DB_NAME)
+        conn = database.safe_connect() if hasattr(database, 'safe_connect') else sqlite3.connect(DB_NAME)
         c = conn.cursor()
         c.execute("SELECT * FROM admin WHERE username=? AND password=?", (user, password_hash))
         row = c.fetchone()
@@ -235,7 +235,7 @@ class HRApp(tk.Tk):
     def init_database(self):
         """تهيئة جداول قاعدة البيانات إذا لم تكن موجودة"""
         try:
-            conn = sqlite3.connect(DB_NAME)
+            conn = database.safe_connect() if hasattr(database, 'safe_connect') else sqlite3.connect(DB_NAME)
             c = conn.cursor()
             c.execute("""
                 CREATE TABLE IF NOT EXISTS employees (
@@ -381,7 +381,7 @@ class HRApp(tk.Tk):
     def execute_db(self, query, params=(), fetch=False):
         """تنفيذ استعلام قاعدة البيانات مع معالجة الأخطاء"""
         try:
-            conn = sqlite3.connect(DB_NAME)
+            conn = database.safe_connect() if hasattr(database, 'safe_connect') else sqlite3.connect(DB_NAME)
             c = conn.cursor()
             c.execute(query, params)
             data = c.fetchall() if fetch else None
@@ -2023,7 +2023,7 @@ class HRApp(tk.Tk):
         if messagebox.askyesno("تأكيد إعادة الضبط",
                                "هل أنت متأكد من رغبتك في إعادة ضبط قاعدة البيانات؟\nسيؤدي هذا إلى حذف جميع البيانات الحالية ولا يمكن التراجع عنه!"):
             try:
-                conn = sqlite3.connect(DB_NAME)
+                conn = database.safe_connect() if hasattr(database, 'safe_connect') else sqlite3.connect(DB_NAME)
                 c = conn.cursor()
 
                 # Drop all tables
@@ -2075,7 +2075,7 @@ class HRApp(tk.Tk):
         password_hash = hashlib.sha256(password.encode()).hexdigest()
 
         try:
-            conn = sqlite3.connect(DB_NAME)
+            conn = database.safe_connect() if hasattr(database, 'safe_connect') else sqlite3.connect(DB_NAME)
             c = conn.cursor()
 
             # Check if admin exists
@@ -2126,7 +2126,7 @@ if __name__ == '__main__':
     # تهيئة قاعدة البيانات عند بدء تشغيل التطبيق
     # (هذا سيتم استدعاؤه أيضاً في HRApp.__init__ ولكن يمكن أن يكون هنا لتشغيل مستقل للتحقق)
     try:
-        conn = sqlite3.connect(DB_NAME)
+        conn = database.safe_connect() if hasattr(database, 'safe_connect') else sqlite3.connect(DB_NAME)
         c = conn.cursor()
         c.execute("""
             CREATE TABLE IF NOT EXISTS admin (
