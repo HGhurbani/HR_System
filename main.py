@@ -80,6 +80,7 @@ class LoginWindow(tk.Tk):
         self.username_entry = tk.Entry(login_frame, font=('Arial', 12),
                                        width=25, relief='solid', bd=1)
         self.username_entry.grid(row=1, column=1, padx=5, pady=(0, 15))
+        self.username_entry.insert(0, "admin")
 
         # حقل كلمة المرور
         tk.Label(login_frame, text="كلمة المرور:",
@@ -88,6 +89,7 @@ class LoginWindow(tk.Tk):
         self.password_entry = tk.Entry(login_frame, font=('Arial', 12),
                                        width=25, show="*", relief='solid', bd=1)
         self.password_entry.grid(row=2, column=1, padx=5, pady=(0, 20))
+        self.password_entry.insert(0, "admin")
 
         # زر تسجيل الدخول
         login_btn = tk.Button(login_frame, text="دخول",
