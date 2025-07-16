@@ -39,10 +39,10 @@ def enable_rtl(root):
     root.option_add('*Entry.justify', 'right')  # محاذاة النص داخل Entry إلى اليمين
     root.option_add('*Button.justify', 'right')  # محاذاة النص داخل Button إلى اليمين
     root.option_add('*Listbox.justify', 'right')  # محاذاة النص داخل Listbox إلى اليمين
-    root.option_add('*Menu.direction', 'rtl')  # اتجاه القوائم المنسدلة من اليمين لليسار
-    root.option_add('*TNotebook.Tab.textDirection', 'rtl')  # اتجاه نصوص التبويبات في ttk.Notebook
-    root.option_add('*Treeview.Heading.textDirection', 'rtl')  # اتجاه عناوين الأعمدة في Treeview
-    root.option_add('*Treeview.Item.textDirection', 'rtl')  # اتجاه عناصر الصفوف في Treeview
+    # يعتمد دعم الاتجاه في بعض عناصر Tk على إصدار Tcl/Tk المستخدم. بعض
+    # الخيارات مثل ``direction`` أو ``textDirection`` غير مدعومة في جميع
+    # البيئات، مما يؤدي إلى أخطاء عند إنشاء الودجات. لذلك نكتفي بتعديل محاذاة
+    # العناصر الأساسية فقط لضمان عمل البرنامج دون مشاكل.
 
 
 class LoginWindow(tk.Tk):
@@ -201,7 +201,9 @@ class LoginWindow(tk.Tk):
 
     def add_context_menu(self, widget):
         """إضافة قائمة نسخ/لصق/قص لحقول الإدخال"""
-        menu = tk.Menu(widget, tearoff=0, direction='rtl')  # تحديد اتجاه القائمة كـ RTL
+        # خيار ``direction`` في ``Menu`` غير متوافر في بعض إصدارات Tk،
+        # لذا نكتفي بإنشاء القائمة دون هذا الخيار لتجنب الأخطاء.
+        menu = tk.Menu(widget, tearoff=0)
         menu.add_command(label="قص", command=lambda: widget.event_generate("<<Cut>>"))
         menu.add_command(label="نسخ", command=lambda: widget.event_generate("<<Copy>>"))
         menu.add_command(label="لصق", command=lambda: widget.event_generate("<<Paste>>"))
