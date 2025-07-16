@@ -124,8 +124,17 @@ class LoginWindow(tk.Tk):
                     password TEXT NOT NULL
                 )
             """)
-            c.execute("INSERT OR IGNORE INTO admin (username, password) VALUES (?, ?)",
-                      ("admin", password_hash))
+            # تحقق مما إذا كان الحساب موجوداً مسبقاً
+            c.execute("SELECT password FROM admin WHERE username=?", ("admin",))
+            row = c.fetchone()
+            if row:
+                # إذا كانت كلمة المرور غير مشفرة (مثل الإصدارات القديمة)
+                if len(row[0]) != 64:
+                    c.execute("UPDATE admin SET password=? WHERE username=?",
+                              (password_hash, "admin"))
+            else:
+                c.execute("INSERT INTO admin (username, password) VALUES (?, ?)",
+                          ("admin", password_hash))
             conn.commit()
             conn.close()
         except Exception as e:
@@ -146,6 +155,16 @@ class LoginWindow(tk.Tk):
         c = conn.cursor()
         c.execute("SELECT * FROM admin WHERE username=? AND password=?", (user, password_hash))
         row = c.fetchone()
+        if not row:
+            # التوافق مع قواعد البيانات القديمة حيث كانت كلمة المرور غير مشفرة
+            c.execute("SELECT * FROM admin WHERE username=? AND password=?", (user, pw))
+            row = c.fetchone()
+            if row:
+                try:
+                    c.execute("UPDATE admin SET password=? WHERE username=?", (password_hash, user))
+                    conn.commit()
+                except Exception as e:
+                    print(f"خطأ في ترقية كلمة المرور: {e}")
         conn.close()
 
         if row:
