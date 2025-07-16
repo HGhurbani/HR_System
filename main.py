@@ -105,17 +105,24 @@ class LoginWindow(tk.Tk):
                                        width=25, relief='solid', bd=1,
                                        justify='right')
         self.username_entry.grid(row=1, column=0, padx=5, pady=(0, 15))
-        self.username_entry.insert(0, "admin")
+        self.add_placeholder(self.username_entry, "اسم المستخدم")
 
         # حقل كلمة المرور
         tk.Label(login_frame, text="كلمة المرور:",
                  font=('Arial', 10), bg='white', fg=COLORS['dark']) \
             .grid(row=2, column=1, sticky='e', padx=5, pady=(0, 5))
         self.password_entry = tk.Entry(login_frame, font=('Arial', 12),
-                                       width=25, show="*", relief='solid', bd=1,
+                                       width=25, relief='solid', bd=1,
                                        justify='right')
-        self.password_entry.grid(row=2, column=0, padx=5, pady=(0, 20))
-        self.password_entry.insert(0, "admin")
+        self.password_entry.grid(row=2, column=0, padx=5, pady=(0, 5))
+        self.add_placeholder(self.password_entry, "كلمة المرور", show='*')
+
+        # خيار إظهار كلمة المرور
+        self.show_pw = tk.BooleanVar(value=False)
+        show_pw_check = tk.Checkbutton(login_frame, text="إظهار كلمة المرور",
+                                       variable=self.show_pw, command=self.toggle_password,
+                                       bg='white')
+        show_pw_check.grid(row=3, column=0, sticky='w', padx=5, pady=(0, 10))
 
         # زر تسجيل الدخول
         login_btn = tk.Button(login_frame, text="دخول",
@@ -123,14 +130,14 @@ class LoginWindow(tk.Tk):
                               bg=COLORS['primary'], fg='white',
                               width=20, pady=8, cursor='hand2',
                               command=self.login)
-        login_btn.grid(row=3, column=0, columnspan=2, pady=(0, 20))
+        login_btn.grid(row=4, column=0, columnspan=2, pady=(0, 20))
 
         # معلومات المطور
         info_text = "المطور الافتراضي: admin / admin"
         info_label = tk.Label(login_frame, text=info_text,
                               font=('Arial', 9),
                               bg='white', fg=COLORS['secondary'])
-        info_label.grid(row=4, column=0, columnspan=2, pady=(0, 10))
+        info_label.grid(row=5, column=0, columnspan=2, pady=(0, 10))
 
     def create_default_admin(self):
         """إنشاء حساب مدير افتراضي"""
@@ -209,6 +216,35 @@ class LoginWindow(tk.Tk):
             menu.tk_popup(event.x_root, event.y_root)
 
         widget.bind("<Button-3>", show_menu)
+
+    def add_placeholder(self, entry, placeholder, show=None):
+        """إضافة نص إرشادي إلى حقل الإدخال"""
+        entry.insert(0, placeholder)
+        entry.config(fg='grey', show='')
+
+        def on_focus_in(event):
+            if entry.get() == placeholder:
+                entry.delete(0, tk.END)
+                entry.config(fg='black')
+                if show:
+                    entry.config(show=show)
+
+        def on_focus_out(event):
+            if not entry.get():
+                entry.insert(0, placeholder)
+                entry.config(fg='grey', show='')
+
+        entry.bind('<FocusIn>', on_focus_in)
+        entry.bind('<FocusOut>', on_focus_out)
+
+    def toggle_password(self):
+        """إظهار أو إخفاء كلمة المرور"""
+        if self.show_pw.get():
+            if self.password_entry.cget('fg') != 'grey':
+                self.password_entry.config(show='')
+        else:
+            if self.password_entry.cget('fg') != 'grey':
+                self.password_entry.config(show='*')
 
 
 class HRApp(tk.Tk):
