@@ -33,7 +33,7 @@ COLORS = {
 def enable_rtl(root):
     """تهيئة الواجهة للعمل من اليمين لليسار وتحسين الخط"""
     # استخدام خط يدعم العربية بشكل جيد
-    default_font = ('DejaVu Sans', 11)
+    default_font = ('Arial', 11)
     root.option_add('*Font', default_font)
     root.option_add('*Label.font', default_font)
     root.option_add('*Entry.font', default_font)
@@ -100,18 +100,20 @@ class LoginWindow(tk.Tk):
         # حقل اسم المستخدم
         tk.Label(login_frame, text="اسم المستخدم:",
                  font=('Arial', 10), bg='white', fg=COLORS['dark']) \
-            .grid(row=1, column=1, sticky='w', padx=5, pady=(0, 5))
+            .grid(row=1, column=1, sticky='e', padx=5, pady=(0, 5))
         self.username_entry = tk.Entry(login_frame, font=('Arial', 12),
-                                       width=25, relief='solid', bd=1)
+                                       width=25, relief='solid', bd=1,
+                                       justify='right')
         self.username_entry.grid(row=1, column=0, padx=5, pady=(0, 15))
         self.username_entry.insert(0, "admin")
 
         # حقل كلمة المرور
         tk.Label(login_frame, text="كلمة المرور:",
                  font=('Arial', 10), bg='white', fg=COLORS['dark']) \
-            .grid(row=2, column=1, sticky='w', padx=5, pady=(0, 5))
+            .grid(row=2, column=1, sticky='e', padx=5, pady=(0, 5))
         self.password_entry = tk.Entry(login_frame, font=('Arial', 12),
-                                       width=25, show="*", relief='solid', bd=1)
+                                       width=25, show="*", relief='solid', bd=1,
+                                       justify='right')
         self.password_entry.grid(row=2, column=0, padx=5, pady=(0, 20))
         self.password_entry.insert(0, "admin")
 
@@ -430,7 +432,8 @@ class HRApp(tk.Tk):
                  bg='white').pack(side='right', padx=10, pady=5)
         self.search_var = tk.StringVar()
         self.search_entry = tk.Entry(search_frame, textvariable=self.search_var,
-                                     font=('Arial', 10), width=30)
+                                     font=('Arial', 10), width=30,
+                                     justify='right')
         self.search_entry.pack(side='right', padx=5, pady=5)
         self.search_var.trace('w', self.search_employees)
 
@@ -464,15 +467,17 @@ class HRApp(tk.Tk):
 
         for i, (label, key) in enumerate(labels_left):
             tk.Label(left_frame, text=label, font=('Arial', 10),
-                     bg='white').grid(row=i, column=1, sticky="w", pady=5)
-            entry = tk.Entry(left_frame, font=('Arial', 10), width=25)
+                     bg='white').grid(row=i, column=1, sticky="e", pady=5)
+            entry = tk.Entry(left_frame, font=('Arial', 10), width=25,
+                             justify='right')
             entry.grid(row=i, column=0, pady=5, padx=5, sticky="ew")
             self.emp_entries[key] = entry
 
         for i, (label, key) in enumerate(labels_right):
             tk.Label(right_frame, text=label, font=('Arial', 10),
-                     bg='white').grid(row=i, column=1, sticky="w", pady=5)
-            entry = tk.Entry(right_frame, font=('Arial', 10), width=25)
+                     bg='white').grid(row=i, column=1, sticky="e", pady=5)
+            entry = tk.Entry(right_frame, font=('Arial', 10), width=25,
+                             justify='right')
             entry.grid(row=i, column=0, pady=5, padx=5, sticky="ew")
             self.emp_entries[key] = entry
 
@@ -792,7 +797,7 @@ class HRApp(tk.Tk):
 
         # الموظف
         tk.Label(fields_frame, text="الموظف:", font=('Arial', 10, 'bold'),
-                 bg='white').grid(row=0, column=1, sticky="w", pady=5)
+                 bg='white').grid(row=0, column=1, sticky="e", pady=5)
         self.atten_emp_var = tk.StringVar()
         self.atten_emp = ttk.Combobox(fields_frame, textvariable=self.atten_emp_var,
                                       state="readonly", width=30, font=('Arial', 10))
@@ -800,21 +805,24 @@ class HRApp(tk.Tk):
 
         # التاريخ
         tk.Label(fields_frame, text="التاريخ:", font=('Arial', 10, 'bold'),
-                 bg='white').grid(row=1, column=1, sticky="w", pady=5)
-        self.attendance_date = tk.Entry(fields_frame, font=('Arial', 10), width=30)
+                 bg='white').grid(row=1, column=1, sticky="e", pady=5)
+        self.attendance_date = tk.Entry(fields_frame, font=('Arial', 10), width=30,
+                                        justify='right')
         self.attendance_date.grid(row=1, column=0, pady=5, padx=10, sticky="ew")
         self.attendance_date.insert(0, datetime.now().strftime("%Y-%m-%d"))
 
         # وقت الحضور
         tk.Label(fields_frame, text="وقت الحضور:", font=('Arial', 10, 'bold'),
-                 bg='white').grid(row=2, column=1, sticky="w", pady=5)
-        self.check_in_entry = tk.Entry(fields_frame, font=('Arial', 10), width=30)
+                 bg='white').grid(row=2, column=1, sticky="e", pady=5)
+        self.check_in_entry = tk.Entry(fields_frame, font=('Arial', 10), width=30,
+                                       justify='right')
         self.check_in_entry.grid(row=2, column=0, pady=5, padx=10, sticky="ew")
 
         # وقت الانصراف
         tk.Label(fields_frame, text="وقت الانصراف:", font=('Arial', 10, 'bold'),
-                 bg='white').grid(row=3, column=1, sticky="w", pady=5)
-        self.check_out_entry = tk.Entry(fields_frame, font=('Arial', 10), width=30)
+                 bg='white').grid(row=3, column=1, sticky="e", pady=5)
+        self.check_out_entry = tk.Entry(fields_frame, font=('Arial', 10), width=30,
+                                        justify='right')
         self.check_out_entry.grid(row=3, column=0, pady=5, padx=10, sticky="ew")
 
         fields_frame.columnconfigure(0, weight=1)
@@ -858,11 +866,11 @@ class HRApp(tk.Tk):
 
         for i, (text, key) in enumerate(stats_items):
             tk.Label(stats_info, text=f"{text}:", font=('Arial', 10, 'bold'),
-                     bg='white').grid(row=0, column=i * 2, padx=10, pady=5, sticky='w')
+                     bg='white').grid(row=0, column=i * 2, padx=10, pady=5, sticky='e')
             self.stats_labels[key] = tk.Label(stats_info, text="0",
                                               font=('Arial', 10), bg='white',
                                               fg=COLORS['secondary'])
-            self.stats_labels[key].grid(row=0, column=i * 2 + 1, padx=5, pady=5, sticky='w')
+            self.stats_labels[key].grid(row=0, column=i * 2 + 1, padx=5, pady=5, sticky='e')
 
         # جدول الحضور
         table_frame = tk.Frame(frame)
@@ -1188,14 +1196,14 @@ class HRApp(tk.Tk):
 
         # الحقول الأساسية
         tk.Label(left_frame, text="الموظف:", font=('Arial', 10, 'bold'),
-                 bg='white').grid(row=0, column=1, sticky='w', pady=5)
+                 bg='white').grid(row=0, column=1, sticky='e', pady=5)
         self.leave_emp_var = tk.StringVar()
         self.leave_emp = ttk.Combobox(left_frame, textvariable=self.leave_emp_var,
                                       state="readonly", width=25, font=('Arial', 10))
         self.leave_emp.grid(row=0, column=0, pady=5, sticky='ew')
 
         tk.Label(left_frame, text="نوع الإجازة:", font=('Arial', 10, 'bold'),
-                 bg='white').grid(row=1, column=1, sticky='w', pady=5)
+                 bg='white').grid(row=1, column=1, sticky='e', pady=5)
         self.leave_type_var = tk.StringVar()
         self.leave_type = ttk.Combobox(left_frame, textvariable=self.leave_type_var,
                                        state="readonly", width=25, font=('Arial', 10),
@@ -1204,23 +1212,27 @@ class HRApp(tk.Tk):
         self.leave_type.grid(row=1, column=0, pady=5, sticky='ew')
 
         tk.Label(left_frame, text="من تاريخ:", font=('Arial', 10, 'bold'),
-                 bg='white').grid(row=2, column=1, sticky='w', pady=5)
-        self.leave_from = tk.Entry(left_frame, font=('Arial', 10), width=25)
+                 bg='white').grid(row=2, column=1, sticky='e', pady=5)
+        self.leave_from = tk.Entry(left_frame, font=('Arial', 10), width=25,
+                                   justify='right')
         self.leave_from.grid(row=2, column=0, pady=5, sticky='ew')
 
         tk.Label(right_frame, text="إلى تاريخ:", font=('Arial', 10, 'bold'),
-                 bg='white').grid(row=0, column=1, sticky='w', pady=5)
-        self.leave_to = tk.Entry(right_frame, font=('Arial', 10), width=25)
+                 bg='white').grid(row=0, column=1, sticky='e', pady=5)
+        self.leave_to = tk.Entry(right_frame, font=('Arial', 10), width=25,
+                                 justify='right')
         self.leave_to.grid(row=0, column=0, pady=5, sticky='ew')
 
         tk.Label(right_frame, text="عدد الأيام:", font=('Arial', 10, 'bold'),
-                 bg='white').grid(row=1, column=1, sticky='w', pady=5)
-        self.leave_days = tk.Entry(right_frame, font=('Arial', 10), width=25, state='readonly')
+                 bg='white').grid(row=1, column=1, sticky='e', pady=5)
+        self.leave_days = tk.Entry(right_frame, font=('Arial', 10), width=25, state='readonly',
+                                   justify='right')
         self.leave_days.grid(row=1, column=0, pady=5, sticky='ew')
 
         tk.Label(right_frame, text="السبب:", font=('Arial', 10, 'bold'),
-                 bg='white').grid(row=2, column=1, sticky='w', pady=5)
-        self.leave_reason = tk.Entry(right_frame, font=('Arial', 10), width=25)
+                 bg='white').grid(row=2, column=1, sticky='e', pady=5)
+        self.leave_reason = tk.Entry(right_frame, font=('Arial', 10), width=25,
+                                     justify='right')
         self.leave_reason.grid(row=2, column=0, pady=5, sticky='ew')
 
         left_frame.columnconfigure(0, weight=1)
@@ -1464,7 +1476,7 @@ class HRApp(tk.Tk):
 
         # الحقول الأساسية
         tk.Label(left_frame, text="الموظف:", font=('Arial', 10, 'bold'),
-                 bg='white').grid(row=0, column=1, sticky='w', pady=5)
+                 bg='white').grid(row=0, column=1, sticky='e', pady=5)
         self.salary_emp_var = tk.StringVar()
         self.salary_emp = ttk.Combobox(left_frame, textvariable=self.salary_emp_var,
                                        state="readonly", width=25, font=('Arial', 10))
@@ -1472,14 +1484,14 @@ class HRApp(tk.Tk):
         self.salary_emp.bind("<<ComboboxSelected>>", self.load_employee_salary)
 
         tk.Label(left_frame, text="الشهر:", font=('Arial', 10, 'bold'),
-                 bg='white').grid(row=1, column=1, sticky='w', pady=5)
+                 bg='white').grid(row=1, column=1, sticky='e', pady=5)
         self.salary_month = ttk.Combobox(left_frame, values=[f"{i:02d}" for i in range(1, 13)],
                                          state="readonly", width=25, font=('Arial', 10))
         self.salary_month.grid(row=1, column=0, pady=5, sticky='ew')
         self.salary_month.set(datetime.now().strftime("%m"))
 
         tk.Label(left_frame, text="السنة:", font=('Arial', 10, 'bold'),
-                 bg='white').grid(row=2, column=1, sticky='w', pady=5)
+                 bg='white').grid(row=2, column=1, sticky='e', pady=5)
         self.salary_year = ttk.Combobox(left_frame, values=[str(i) for i in
                                                             range(datetime.now().year - 5, datetime.now().year + 2)],
                                         state="readonly", width=25, font=('Arial', 10))
@@ -1487,24 +1499,27 @@ class HRApp(tk.Tk):
         self.salary_year.set(datetime.now().year)
 
         tk.Label(right_frame, text="الراتب الأساسي:", font=('Arial', 10, 'bold'),
-                 bg='white').grid(row=0, column=1, sticky='w', pady=5)
-        self.basic_salary_entry = tk.Entry(right_frame, font=('Arial', 10), width=25, state='readonly')
+                 bg='white').grid(row=0, column=1, sticky='e', pady=5)
+        self.basic_salary_entry = tk.Entry(right_frame, font=('Arial', 10), width=25, state='readonly',
+                                           justify='right')
         self.basic_salary_entry.grid(row=0, column=0, pady=5, sticky='ew')
 
         tk.Label(right_frame, text="المكافآت:", font=('Arial', 10, 'bold'),
-                 bg='white').grid(row=1, column=1, sticky='w', pady=5)
-        self.bonuses_entry = tk.Entry(right_frame, font=('Arial', 10), width=25)
+                 bg='white').grid(row=1, column=1, sticky='e', pady=5)
+        self.bonuses_entry = tk.Entry(right_frame, font=('Arial', 10), width=25,
+                                     justify='right')
         self.bonuses_entry.grid(row=1, column=0, pady=5, sticky='ew')
         self.bonuses_entry.insert(0, "0.0")
 
         tk.Label(right_frame, text="الخصومات:", font=('Arial', 10, 'bold'),
-                 bg='white').grid(row=2, column=1, sticky='w', pady=5)
-        self.deductions_entry = tk.Entry(right_frame, font=('Arial', 10), width=25)
+                 bg='white').grid(row=2, column=1, sticky='e', pady=5)
+        self.deductions_entry = tk.Entry(right_frame, font=('Arial', 10), width=25,
+                                        justify='right')
         self.deductions_entry.grid(row=2, column=0, pady=5, sticky='ew')
         self.deductions_entry.insert(0, "0.0")
 
         tk.Label(right_frame, text="صافي الراتب:", font=('Arial', 10, 'bold'),
-                 bg='white').grid(row=3, column=1, sticky='w', pady=5)
+                 bg='white').grid(row=3, column=1, sticky='e', pady=5)
         self.net_salary_label = tk.Label(right_frame, text="0.0", font=('Arial', 10, 'bold'),
                                          bg='white', fg=COLORS['primary'])
         self.net_salary_label.grid(row=3, column=0, pady=5, sticky='ew')
@@ -1820,12 +1835,12 @@ class HRApp(tk.Tk):
         date_range_window.grab_set()
 
         tk.Label(date_range_window, text="من تاريخ (YYYY-MM-DD):").pack(pady=5)
-        from_date_entry = tk.Entry(date_range_window)
+        from_date_entry = tk.Entry(date_range_window, justify='right')
         from_date_entry.pack(pady=2)
         from_date_entry.insert(0, (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d"))
 
         tk.Label(date_range_window, text="إلى تاريخ (YYYY-MM-DD):").pack(pady=5)
-        to_date_entry = tk.Entry(date_range_window)
+        to_date_entry = tk.Entry(date_range_window, justify='right')
         to_date_entry.pack(pady=2)
         to_date_entry.insert(0, datetime.now().strftime("%Y-%m-%d"))
 
@@ -1956,10 +1971,10 @@ class HRApp(tk.Tk):
 
         tk.Label(general_settings_frame, text="اسم قاعدة البيانات:", font=('Arial', 10, 'bold'), bg='white').grid(row=0,
                                   column=1,
-                                  sticky='w',
+                                  sticky='e',
                                   pady=5)
         self.db_name_label = tk.Label(general_settings_frame, text=DB_NAME, font=('Arial', 10), bg='white')
-        self.db_name_label.grid(row=0, column=0, sticky='w', pady=5)
+        self.db_name_label.grid(row=0, column=0, sticky='e', pady=5)
 
         tk.Button(general_settings_frame, text="فتح مجلد قاعدة البيانات", command=self.open_db_folder,
                   bg=COLORS['secondary'], fg='white', font=('Arial', 10, 'bold')).grid(row=0, column=2, padx=10, pady=5)
@@ -1973,21 +1988,24 @@ class HRApp(tk.Tk):
         admin_settings_frame.pack(fill='x', padx=10, pady=10)
 
         tk.Label(admin_settings_frame, text="اسم المستخدم:", font=('Arial', 10), bg='white').grid(row=0, column=1,
-                  sticky='w', pady=5)
-        self.admin_username_entry = tk.Entry(admin_settings_frame, font=('Arial', 10), width=25)
+                  sticky='e', pady=5)
+        self.admin_username_entry = tk.Entry(admin_settings_frame, font=('Arial', 10), width=25,
+                                             justify='right')
         self.admin_username_entry.grid(row=0, column=0, pady=5, padx=5)
 
         tk.Label(admin_settings_frame, text="كلمة المرور الجديدة:", font=('Arial', 10), bg='white').grid(row=1,
                          column=1,
-                         sticky='w',
+                         sticky='e',
                          pady=5)
-        self.admin_password_entry = tk.Entry(admin_settings_frame, show="*", font=('Arial', 10), width=25)
+        self.admin_password_entry = tk.Entry(admin_settings_frame, show="*", font=('Arial', 10), width=25,
+                                             justify='right')
         self.admin_password_entry.grid(row=1, column=0, pady=5, padx=5)
 
         tk.Label(admin_settings_frame, text="تأكيد كلمة المرور:", font=('Arial', 10), bg='white').grid(row=2, column=1,
-                       sticky='w',
+                       sticky='e',
                        pady=5)
-        self.admin_confirm_password_entry = tk.Entry(admin_settings_frame, show="*", font=('Arial', 10), width=25)
+        self.admin_confirm_password_entry = tk.Entry(admin_settings_frame, show="*", font=('Arial', 10), width=25,
+                                                     justify='right')
         self.admin_confirm_password_entry.grid(row=2, column=0, pady=5, padx=5)
 
         tk.Button(admin_settings_frame, text="إضافة/تعديل مسؤول", command=self.add_or_update_admin,
@@ -2000,7 +2018,7 @@ class HRApp(tk.Tk):
         tk.Label(admin_settings_frame, text="المسؤولون الحاليون:", font=('Arial', 10, 'bold'), bg='white').grid(row=4,
                                                                                                                 column=0,
                                                                                                                 columnspan=3,
-                                                                                                                sticky='w',
+                                                                                                                sticky='e',
                                                                                                                 pady=10)
         self.admin_listbox = tk.Listbox(admin_settings_frame, height=5, font=('Arial', 10))
         self.admin_listbox.grid(row=5, column=0, columnspan=3, sticky='ew', padx=5, pady=5)
