@@ -29,6 +29,15 @@ COLORS = {
     'dark': '#343A40'
 }
 
+# تفعيل المحاذاة من اليمين لليسار
+def enable_rtl(root):
+    """تهيئة الواجهة للعمل من اليمين لليسار"""
+    root.option_add('*Label.anchor', 'e')
+    root.option_add('*Label.justify', 'right')
+    root.option_add('*Entry.justify', 'right')
+    root.option_add('*Button.justify', 'right')
+    root.option_add('*Listbox.justify', 'right')
+
 
 class LoginWindow(tk.Tk):
     def __init__(self):
@@ -37,6 +46,7 @@ class LoginWindow(tk.Tk):
         self.geometry("450x350")
         self.resizable(False, False)
         self.configure(bg=COLORS['light'])
+        enable_rtl(self)
 
         # إنشاء الواجهة
         self.create_login_ui()
@@ -196,6 +206,7 @@ class HRApp(tk.Tk):
         self.geometry("1400x800")
         self.state('zoomed')  # تكبير النافذة
         self.configure(bg=COLORS['light'])
+        enable_rtl(self)
 
         # إنشاء شريط الحالة
         self.create_status_bar()
