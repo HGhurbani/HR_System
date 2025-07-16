@@ -2,6 +2,9 @@ import sqlite3
 import tkinter as tk
 from tkinter import ttk, messagebox
 
+# Ensure the database and the employees table exist
+import database
+
 def add_employee():
     name = name_entry.get()
     position = position_entry.get()
