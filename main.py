@@ -447,10 +447,12 @@ class HRApp(tk.Tk):
 
         # تقسيم الحقول إلى عمودين
         left_frame = tk.Frame(input_frame, bg='white')
-        left_frame.pack(side='left', fill='both', expand=True, padx=10, pady=10)
+        # عرض الحقول الأساسية في العمود الأيمن
+        left_frame.pack(side='right', fill='both', expand=True, padx=10, pady=10)
 
         right_frame = tk.Frame(input_frame, bg='white')
-        right_frame.pack(side='right', fill='both', expand=True, padx=10, pady=10)
+        # عرض الحقول الاختيارية في العمود الأيسر
+        right_frame.pack(side='left', fill='both', expand=True, padx=10, pady=10)
 
         # الحقول الأساسية
         labels_left = [
@@ -1199,10 +1201,12 @@ class HRApp(tk.Tk):
 
         # تقسيم الحقول
         left_frame = tk.Frame(fields_frame, bg='white')
-        left_frame.pack(side='left', fill='both', expand=True, padx=10)
+        # الحقول الأساسية تظهر في العمود الأيمن
+        left_frame.pack(side='right', fill='both', expand=True, padx=10)
 
         right_frame = tk.Frame(fields_frame, bg='white')
-        right_frame.pack(side='right', fill='both', expand=True, padx=10)
+        # الحقول الثانوية تظهر في العمود الأيسر
+        right_frame.pack(side='left', fill='both', expand=True, padx=10)
 
         # الحقول الأساسية
         tk.Label(left_frame, text="الموظف:", font=('Arial', 10, 'bold'),
@@ -1482,10 +1486,12 @@ class HRApp(tk.Tk):
 
         # تقسيم الحقول
         left_frame = tk.Frame(fields_frame, bg='white')
-        left_frame.pack(side='left', fill='both', expand=True, padx=10)
+        # الحقول الأساسية تظهر في العمود الأيمن
+        left_frame.pack(side='right', fill='both', expand=True, padx=10)
 
         right_frame = tk.Frame(fields_frame, bg='white')
-        right_frame.pack(side='right', fill='both', expand=True, padx=10)
+        # الحقول الثانوية تظهر في العمود الأيسر
+        right_frame.pack(side='left', fill='both', expand=True, padx=10)
 
         # الحقول الأساسية
         tk.Label(left_frame, text="الموظف:", font=('Arial', 10, 'bold'),
