@@ -583,16 +583,11 @@ class HRApp(tk.Tk):
 
         # إطار الإدخال
         input_frame = tk.Frame(frame, bg='white', relief='raised', bd=1)
-        input_frame.pack(fill='x', padx=10, pady=5)
+        input_frame.pack(fill='both', expand=True, padx=10, pady=5)
 
-        # تقسيم الحقول إلى عمودين
-        left_frame = tk.Frame(input_frame, bg='white')
-        # عرض الحقول الأساسية في العمود الأيمن
-        left_frame.pack(side='right', fill='both', expand=True, padx=10, pady=10)
-
-        right_frame = tk.Frame(input_frame, bg='white')
-        # عرض الحقول الاختيارية في العمود الأيسر
-        right_frame.pack(side='left', fill='both', expand=True, padx=10, pady=10)
+        # إطار موحد للحقول مع تخطيط مرن
+        fields_frame = tk.Frame(input_frame, bg='white')
+        fields_frame.pack(fill='both', expand=True, padx=10, pady=10)
 
         # الحقول الأساسية
         labels_left = [
@@ -626,30 +621,24 @@ class HRApp(tk.Tk):
 
         self.emp_entries = {}
 
-        for i, (label, key) in enumerate(labels_left):
-            tk.Label(left_frame, text=label, font=('Arial', 10),
-                     bg='white').grid(row=i, column=1, sticky="e", pady=5)
-            if key == "hire_date":
-                entry = DateEntry(left_frame, font=('Arial', 10), width=25)
+        all_labels = labels_left + labels_right
+        date_fields = {"hire_date", "birth_date"}
+
+        for i, (label, key) in enumerate(all_labels):
+            row = i // 2
+            col = (i % 2) * 2
+            tk.Label(fields_frame, text=label, font=('Arial', 10),
+                     bg='white').grid(row=row, column=col + 1, sticky="e", pady=5, padx=5)
+            if key in date_fields:
+                entry = DateEntry(fields_frame, font=('Arial', 10), width=25)
             else:
-                entry = tk.Entry(left_frame, font=('Arial', 10), width=25,
+                entry = tk.Entry(fields_frame, font=('Arial', 10), width=25,
                                  justify='right')
-            entry.grid(row=i, column=0, pady=5, padx=5, sticky="ew")
+            entry.grid(row=row, column=col, pady=5, padx=5, sticky="ew")
             self.emp_entries[key] = entry
 
-        for i, (label, key) in enumerate(labels_right):
-            tk.Label(right_frame, text=label, font=('Arial', 10),
-                     bg='white').grid(row=i, column=1, sticky="e", pady=5)
-            if key == "birth_date":
-                entry = DateEntry(right_frame, font=('Arial', 10), width=25)
-            else:
-                entry = tk.Entry(right_frame, font=('Arial', 10), width=25,
-                                 justify='right')
-            entry.grid(row=i, column=0, pady=5, padx=5, sticky="ew")
-            self.emp_entries[key] = entry
-
-        left_frame.columnconfigure(0, weight=1)
-        right_frame.columnconfigure(0, weight=1)
+        fields_frame.columnconfigure(0, weight=1)
+        fields_frame.columnconfigure(2, weight=1)
 
         # أزرار العمليات
         button_frame = tk.Frame(input_frame, bg='white')
