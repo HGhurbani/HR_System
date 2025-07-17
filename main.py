@@ -606,7 +606,22 @@ class HRApp(tk.Tk):
             ("البريد الإلكتروني", "email"),
             ("رقم الهاتف", "phone"),
             ("العنوان", "address"),
-            ("الرقم الوظيفي", "employee_code")
+            ("الرقم الوظيفي", "employee_code"),
+            ("تاريخ الميلاد", "birth_date"),
+            ("الجنس", "gender"),
+            ("الحالة", "status"),
+            ("الإدارة", "department"),
+            ("الموقع", "location"),
+            ("المهنة", "profession"),
+            ("الجنسية", "nationality"),
+            ("الديانة", "religion"),
+            ("الحالة الاجتماعية", "marital_status"),
+            ("النوع", "emp_type"),
+            ("الرقم الكودي", "code_number"),
+            ("رقم الملف القديم", "old_file_number"),
+            ("ساعات العمل", "working_hours"),
+            ("نوع الصرف", "payment_type"),
+            ("جهة التعاقد", "contract_entity")
         ]
 
         self.emp_entries = {}
@@ -625,8 +640,11 @@ class HRApp(tk.Tk):
         for i, (label, key) in enumerate(labels_right):
             tk.Label(right_frame, text=label, font=('Arial', 10),
                      bg='white').grid(row=i, column=1, sticky="e", pady=5)
-            entry = tk.Entry(right_frame, font=('Arial', 10), width=25,
-                             justify='right')
+            if key == "birth_date":
+                entry = DateEntry(right_frame, font=('Arial', 10), width=25)
+            else:
+                entry = tk.Entry(right_frame, font=('Arial', 10), width=25,
+                                 justify='right')
             entry.grid(row=i, column=0, pady=5, padx=5, sticky="ew")
             self.emp_entries[key] = entry
 
@@ -658,13 +676,18 @@ class HRApp(tk.Tk):
         table_frame.pack(fill='both', expand=True, padx=10, pady=5)
 
         # أعمدة الجدول
-        columns = ("id", "الاسم الكامل", "الوظيفة", "الراتب", "تاريخ التعيين",
-                   "البريد الإلكتروني", "الهاتف", "العنوان", "الرقم الوظيفي")
+        columns = (
+            "id", "الاسم الكامل", "الوظيفة", "الراتب", "تاريخ التعيين",
+            "البريد الإلكتروني", "الهاتف", "العنوان", "الرقم الوظيفي",
+            "تاريخ الميلاد", "الجنس", "الحالة", "الإدارة", "الموقع",
+            "المهنة", "الجنسية", "الديانة", "الحالة الاجتماعية", "النوع",
+            "الرقم الكودي", "رقم الملف القديم", "ساعات العمل", "نوع الصرف",
+            "جهة التعاقد")
 
         self.emp_tree = ttk.Treeview(table_frame, columns=columns, show="headings", height=15)
 
         # تنسيق الأعمدة
-        column_widths = [50, 150, 120, 100, 100, 180, 120, 200, 100]
+        column_widths = [50, 150, 120, 100, 100, 180, 120, 200, 100] + [100] * 15
         for i, (col, width) in enumerate(zip(columns, column_widths)):
             self.emp_tree.heading(col, text=col)
             self.emp_tree.column(col, width=width, anchor='e')
@@ -759,10 +782,18 @@ class HRApp(tk.Tk):
 
         # إضافة الموظف
         values = [self.emp_entries[key].get().strip() for key in
-                  ["full_name", "position", "salary", "hire_date", "email", "phone", "address", "employee_code"]]
+                  [
+                      "full_name", "position", "salary", "hire_date",
+                      "email", "phone", "address", "employee_code",
+                      "birth_date", "gender", "status", "department",
+                      "location", "profession", "nationality", "religion",
+                      "marital_status", "emp_type", "code_number",
+                      "old_file_number", "working_hours", "payment_type",
+                      "contract_entity"
+                  ]]
 
         result = self.execute_db(
-            "INSERT INTO employees (full_name, position, salary, hire_date, email, phone, address, employee_code) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO employees (full_name, position, salary, hire_date, email, phone, address, employee_code, birth_date, gender, status, department, location, profession, nationality, religion, marital_status, emp_type, code_number, old_file_number, working_hours, payment_type, contract_entity) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             values,
         )
 
@@ -783,7 +814,14 @@ class HRApp(tk.Tk):
         emp_data = self.emp_tree.item(selected[0])["values"]
 
         # ملء الحقول ببيانات الموظف
-        fields = ["id", "full_name", "position", "salary", "hire_date", "email", "phone", "address", "employee_code"]
+        fields = [
+            "id", "full_name", "position", "salary", "hire_date",
+            "email", "phone", "address", "employee_code",
+            "birth_date", "gender", "status", "department", "location",
+            "profession", "nationality", "religion", "marital_status",
+            "emp_type", "code_number", "old_file_number", "working_hours",
+            "payment_type", "contract_entity"
+        ]
         for i, field in enumerate(fields):
             if field == "id":  # Skip ID for entry fields
                 continue
@@ -846,11 +884,19 @@ class HRApp(tk.Tk):
             return
 
         values = [self.emp_entries[key].get().strip() for key in
-                  ["full_name", "position", "salary", "hire_date", "email", "phone", "address", "employee_code"]]
+                  [
+                      "full_name", "position", "salary", "hire_date",
+                      "email", "phone", "address", "employee_code",
+                      "birth_date", "gender", "status", "department",
+                      "location", "profession", "nationality", "religion",
+                      "marital_status", "emp_type", "code_number",
+                      "old_file_number", "working_hours", "payment_type",
+                      "contract_entity"
+                  ]]
         values.append(emp_id)
 
         result = self.execute_db(
-            "UPDATE employees SET full_name=?, position=?, salary=?, hire_date=?, email=?, phone=?, address=?, employee_code=? WHERE id=?",
+            "UPDATE employees SET full_name=?, position=?, salary=?, hire_date=?, email=?, phone=?, address=?, employee_code=?, birth_date=?, gender=?, status=?, department=?, location=?, profession=?, nationality=?, religion=?, marital_status=?, emp_type=?, code_number=?, old_file_number=?, working_hours=?, payment_type=?, contract_entity=? WHERE id=?",
             values,
         )
 
@@ -904,8 +950,14 @@ class HRApp(tk.Tk):
         try:
             with open(file_path, 'w', newline='', encoding='utf-8') as f:
                 writer = csv.writer(f)
-                headers = ["المعرف", "الاسم الكامل", "الوظيفة", "الراتب", "تاريخ التعيين",
-                           "البريد الإلكتروني", "الهاتف", "العنوان", "الرقم الوظيفي"]
+                headers = [
+                    "المعرف", "الاسم الكامل", "الوظيفة", "الراتب", "تاريخ التعيين",
+                    "البريد الإلكتروني", "الهاتف", "العنوان", "الرقم الوظيفي",
+                    "تاريخ الميلاد", "الجنس", "الحالة", "الإدارة", "الموقع",
+                    "المهنة", "الجنسية", "الديانة", "الحالة الاجتماعية", "النوع",
+                    "الرقم الكودي", "رقم الملف القديم", "ساعات العمل", "نوع الصرف",
+                    "جهة التعاقد"
+                ]
                 writer.writerow(headers)
 
                 rows = self.execute_db("SELECT * FROM employees ORDER BY full_name", fetch=True)

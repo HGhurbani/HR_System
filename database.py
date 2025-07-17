@@ -42,10 +42,25 @@ def init_db():
                 position TEXT,
                 salary REAL,
                 hire_date TEXT,
-                email TEXT UNIQUE,  -- Added UNIQUE constraint for email
+                email TEXT UNIQUE,
                 phone TEXT,
                 address TEXT,
-                employee_code TEXT UNIQUE -- Added UNIQUE constraint for employee code
+                employee_code TEXT UNIQUE,
+                birth_date TEXT,
+                gender TEXT,
+                status TEXT,
+                department TEXT,
+                location TEXT,
+                profession TEXT,
+                nationality TEXT,
+                religion TEXT,
+                marital_status TEXT,
+                emp_type TEXT,
+                code_number TEXT,
+                old_file_number TEXT,
+                working_hours TEXT,
+                payment_type TEXT,
+                contract_entity TEXT
             )
         ''')
 
@@ -151,7 +166,22 @@ def upgrade_db():
             ("email", "TEXT UNIQUE"),
             ("phone", "TEXT"),
             ("address", "TEXT"),
-            ("employee_code", "TEXT UNIQUE")
+            ("employee_code", "TEXT UNIQUE"),
+            ("birth_date", "TEXT"),
+            ("gender", "TEXT"),
+            ("status", "TEXT"),
+            ("department", "TEXT"),
+            ("location", "TEXT"),
+            ("profession", "TEXT"),
+            ("nationality", "TEXT"),
+            ("religion", "TEXT"),
+            ("marital_status", "TEXT"),
+            ("emp_type", "TEXT"),
+            ("code_number", "TEXT"),
+            ("old_file_number", "TEXT"),
+            ("working_hours", "TEXT"),
+            ("payment_type", "TEXT"),
+            ("contract_entity", "TEXT")
         ]:
             if col_def[0] not in columns:
                 cur.execute(f"ALTER TABLE employees ADD COLUMN {col_def[0]} {col_def[1]}")
@@ -188,7 +218,12 @@ def upgrade_db():
                 pass
         else:
             cur.execute("ALTER TABLE employees ADD COLUMN full_name TEXT")
-    for col in ['email', 'phone', 'address', 'employee_code']:
+    for col in [
+        'email', 'phone', 'address', 'employee_code',
+        'birth_date', 'gender', 'status', 'department', 'location',
+        'profession', 'nationality', 'religion', 'marital_status',
+        'emp_type', 'code_number', 'old_file_number', 'working_hours',
+        'payment_type', 'contract_entity']:
         if col not in cols:
             cur.execute(f"ALTER TABLE employees ADD COLUMN {col} TEXT")
 
